@@ -2,6 +2,10 @@ import Document from '#models/document'
 import { useForm } from '@inertiajs/react'
 import { FormEventHandler } from 'react'
 
+type FormData = {
+  file: File | null
+}
+
 export default function CreateEmbeddingPage({
   error,
   document,
@@ -9,8 +13,8 @@ export default function CreateEmbeddingPage({
   error?: string
   document?: Document
 }) {
-  const { data, setData, post } = useForm({
-    text: '',
+  const { setData, post } = useForm<FormData>({
+    file: null,
   })
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
@@ -18,17 +22,17 @@ export default function CreateEmbeddingPage({
     post('/embeddings/create')
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null
+    setData('file', file)
+  }
+
   return (
     <div>
       <h1>Create Embedding</h1>
 
       <form onSubmit={handleSubmit}>
-        <textarea
-          name="text"
-          value={data.text}
-          onChange={(e) => setData({ text: e.target.value })}
-          placeholder="Enter text to embed"
-        />
+        <input type="file" accept=".pdf" onChange={handleFileChange} name="file" />
         <button type="submit">Create Embedding</button>
       </form>
 
