@@ -1,7 +1,7 @@
 import Document from '#models/document'
+import { EmbeddingService } from '#services/embedding_service'
+import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
-import OpenAI from 'openai'
-import fs from 'fs/promises'
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs'
 import type { TextItem } from 'pdfjs-dist/types/src/display/api.js'
 
@@ -10,7 +10,8 @@ export default class EmbeddingsController {
     return inertia.render('embeddings/create')
   }
 
-  async store({ request, inertia }: HttpContext) {
+  @inject()
+  async store({ request, inertia }: HttpContext, embeddingService: EmbeddingService) {
     const file = request.file('file', {
       extnames: ['pdf'],
       size: '10mb',
@@ -21,10 +22,6 @@ export default class EmbeddingsController {
         error: 'A valid PDF file is required to create an embedding.',
       })
     }
-
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    })
 
     try {
       await file.move('./tmp')
@@ -41,15 +38,11 @@ export default class EmbeddingsController {
 
       const text = strings.join(' ')
 
-      const embedding = await openai.embeddings.create({
-        model: 'text-embedding-3-small',
-        input: text,
-        encoding_format: 'float',
-      })
+      const embedding = await embeddingService.createEmbedding(text)
 
       const document = await Document.create({
         content: text,
-        embedding: embedding.data[0].embedding, // Assuming the response structure
+        embedding, // Assuming the response structure
       })
 
       console.log(strings.join(' '))
