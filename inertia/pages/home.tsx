@@ -5,18 +5,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 import {
-  Search,
-  Plus,
   FileText,
   Upload,
   MessageSquare,
-  Settings,
-  Home,
   Folder,
   Star,
-  Clock,
   Send,
   Paperclip,
   MoreHorizontal,
@@ -25,10 +19,11 @@ import {
   ImageIcon,
   FileSpreadsheet,
 } from 'lucide-react'
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/app-sidebar'
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 
 export default function HomePage() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [selectedDocument, setSelectedDocument] = useState('getting-started')
   const [chatMessage, setChatMessage] = useState('')
 
   const documents = [
@@ -111,128 +106,38 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div
-        className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-white border-r border-gray-200 flex flex-col transition-all duration-200`}
-      >
-        {/* Sidebar Header */}
-        <div className="p-4 border-b border-gray-200">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <MessageSquare className="h-4 w-4 text-white" />
-            </div>
-            {!sidebarCollapsed && (
-              <div>
-                <h1 className="font-semibold text-gray-900">KnowledgeAI</h1>
-                <p className="text-xs text-gray-500">Workspace</p>
-              </div>
-            )}
-          </div>
-        </div>
+    <SidebarProvider>
+      <AppSidebar />
 
-        {/* Navigation */}
-        <div className="p-3">
-          <nav className="space-y-1">
-            <Button variant="ghost" className="w-full justify-start gap-2 text-gray-700">
-              <Home className="h-4 w-4" />
-              {!sidebarCollapsed && 'Home'}
-            </Button>
-            <Button variant="ghost" className="w-full justify-start gap-2 text-gray-700">
-              <Search className="h-4 w-4" />
-              {!sidebarCollapsed && 'Search'}
-            </Button>
-            <Button variant="ghost" className="w-full justify-start gap-2 text-gray-700">
-              <Star className="h-4 w-4" />
-              {!sidebarCollapsed && 'Starred'}
-            </Button>
-            <Button variant="ghost" className="w-full justify-start gap-2 text-gray-700">
-              <Clock className="h-4 w-4" />
-              {!sidebarCollapsed && 'Recent'}
-            </Button>
-          </nav>
-        </div>
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel>
+          <ScrollArea className="overflow-auto h-screen">
+            <header className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <SidebarTrigger />
 
-        <Separator />
-
-        {/* Documents Section */}
-        {!sidebarCollapsed && (
-          <div className="flex-1 p-3">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium text-gray-900">Documents</h3>
-              <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
-                <Plus className="h-3 w-3" />
-              </Button>
-            </div>
-
-            <ScrollArea className="h-full">
-              <div className="space-y-1">
-                {documents.slice(0, 8).map((doc) => (
-                  <Button
-                    key={doc.id}
-                    variant={selectedDocument === doc.id ? 'secondary' : 'ghost'}
-                    className="w-full justify-start gap-2 h-8 text-xs"
-                    onClick={() => setSelectedDocument(doc.id)}
-                  >
-                    {getFileIcon(doc.type)}
-                    <span className="truncate">{doc.name}</span>
-                    {doc.starred && <Star className="h-3 w-3 text-yellow-500 ml-auto" />}
-                  </Button>
-                ))}
-              </div>
-            </ScrollArea>
-          </div>
-        )}
-
-        {/* Settings */}
-        <div className="p-3 border-t border-gray-200">
-          <Button variant="ghost" className="w-full justify-start gap-2 text-gray-700">
-            <Settings className="h-4 w-4" />
-            {!sidebarCollapsed && 'Settings'}
-          </Button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex">
-        {/* Document View */}
-        <div className="flex-1 flex flex-col">
-          {/* Header */}
-          <div className="bg-white border-b border-gray-200 p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                >
-                  <ChevronRight
-                    className={`h-4 w-4 transition-transform ${sidebarCollapsed ? '' : 'rotate-180'}`}
-                  />
-                </Button>
+                  <div className="flex items-center gap-2">
+                    <Folder className="h-4 w-4 text-gray-500" />
+                    <span className="text-sm text-gray-500">Knowledge Base</span>
+                    <ChevronRight className="h-3 w-3 text-gray-400" />
+                    <span className="text-sm font-medium">Getting Started Guide</span>
+                  </div>
+                </div>
                 <div className="flex items-center gap-2">
-                  <Folder className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm text-gray-500">Knowledge Base</span>
-                  <ChevronRight className="h-3 w-3 text-gray-400" />
-                  <span className="text-sm font-medium">Getting Started Guide</span>
+                  <Button variant="outline" size="sm">
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                  <Upload className="h-4 w-4 mr-2" />
-                  Upload
-                </Button>
-                <Button variant="outline" size="sm">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
+            </header>
 
-          {/* Document Content */}
-          <div className="flex-1 p-6 bg-white">
-            <div className="max-w-4xl mx-auto">
-              {/* Document Header */}
+            {/* Document Content */}
+            <div className="p-5">
               <div className="mb-6">
                 <div className="flex items-center gap-3 mb-2">
                   <FileText className="h-6 w-6 text-red-500" />
@@ -297,12 +202,12 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </ScrollArea>
+        </ResizablePanel>
 
-        {/* Chat Panel */}
-        <div className="w-96 bg-white border-l border-gray-200 flex flex-col">
-          {/* Chat Header */}
+        <ResizableHandle withHandle />
+
+        <ResizablePanel className="h-screen">
           <div className="p-4 border-b border-gray-200">
             <div className="flex items-center gap-2">
               <MessageSquare className="h-5 w-5 text-blue-500" />
@@ -312,7 +217,7 @@ export default function HomePage() {
           </div>
 
           {/* Chat Messages */}
-          <ScrollArea className="flex-1 p-4">
+          <ScrollArea className="flex-1 p-2 h-[80%]">
             <div className="space-y-4">
               {chatHistory.map((message) => (
                 <div
@@ -367,12 +272,12 @@ export default function HomePage() {
                 <Send className="h-4 w-4" />
               </Button>
             </div>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-center text-gray-400 mt-2">
               AI can make mistakes. Verify important information.
             </p>
           </div>
-        </div>
-      </div>
-    </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </SidebarProvider>
   )
 }
