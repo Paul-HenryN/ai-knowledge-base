@@ -7,12 +7,12 @@
 |
 */
 
-const EmbeddingsController = () => import('#controllers/embeddings_controller')
+const DocumentsController = () => import('#controllers/documents_controller')
 const ChatsController = () => import('#controllers/chats_controller')
 
 import router from '@adonisjs/core/services/router'
-router.on('/').renderInertia('home')
-router.get('/embeddings/create', [EmbeddingsController, 'create'])
-router.post('/embeddings/create', [EmbeddingsController, 'store'])
+router.get('/', [DocumentsController, 'index']).as('home')
+router.post('/documents', [DocumentsController, 'store'])
 router.on('/chat').renderInertia('chat')
 router.post('/chat', [ChatsController, 'post'])
+router.get('/documents/:id', [DocumentsController, 'show'])

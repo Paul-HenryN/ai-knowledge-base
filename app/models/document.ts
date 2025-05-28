@@ -14,6 +14,15 @@ export default class Document extends BaseModel {
   })
   declare embedding: number[]
 
+  @column()
+  declare name: string
+
+  @column()
+  declare url: string
+
+  @column()
+  declare type: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
