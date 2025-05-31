@@ -5,7 +5,7 @@ import db from '@adonisjs/lucid/services/db'
 
 export default class ChatsController {
   @inject()
-  public async post({ request, inertia }: HttpContext, embeddingService: EmbeddingService) {
+  public async post({ request, response }: HttpContext, embeddingService: EmbeddingService) {
     const { message } = request.body()
 
     const embeddedMessage = (await embeddingService.createEmbedding(message)).join(',')
@@ -27,6 +27,6 @@ export default class ChatsController {
     const botResponse = await embeddingService.chat(`Context:${context}\nUser:${message}`)
     console.log('Bot Response:', botResponse)
 
-    return inertia.render('chat', { message })
+    return response.ok({ botResponse })
   }
 }
