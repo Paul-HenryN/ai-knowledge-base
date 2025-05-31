@@ -23,6 +23,9 @@ export default class Document extends BaseModel {
   @column()
   declare type: string
 
+  @column()
+  declare status: 'pending' | 'failed' | 'success'
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

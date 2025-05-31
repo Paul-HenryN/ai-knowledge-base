@@ -6,8 +6,12 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.text('content').notNullable()
+      table.text('content')
       table.specificType('embedding', 'vector(1536)')
+      table.string('name').notNullable().notNullable()
+      table.string('url').notNullable().notNullable()
+      table.string('type').notNullable().notNullable()
+      table.string('status').notNullable().defaultTo('pending')
       table.timestamps(true, true)
     })
   }

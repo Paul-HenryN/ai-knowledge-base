@@ -1,28 +1,21 @@
-import { useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
 import 'react-pdf/dist/esm/Page/TextLayer.css'
+import { OnDocumentLoadSuccess } from 'react-pdf/dist/esm/shared/types.js'
 
 // Set worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
 
-export function PDFViewer({ pdfUrl }: { pdfUrl: string }) {
-  const [numPages, setNumPages] = useState(0)
-  const [pageNumber, setPageNumber] = useState(1)
+type PDFViewerProps = {
+  pdfUrl: string
+  pageNumber?: number
+  onLoadSuccess?: OnDocumentLoadSuccess
+}
 
+export function PDFViewer({ pdfUrl, pageNumber = 1, onLoadSuccess }: PDFViewerProps) {
   return (
-    <div>
-      <Document file={pdfUrl} onLoadSuccess={({ numPages }) => setNumPages(numPages)}>
-        <Page pageNumber={pageNumber} width={0} />
-      </Document>
-
-      <div>
-        <button onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}>Previous</button>
-        <span>
-          Page {pageNumber} of {numPages}
-        </span>
-        <button onClick={() => setPageNumber(Math.min(numPages, pageNumber + 1))}>Next</button>
-      </div>
-    </div>
+    <Document file={pdfUrl} onLoadSuccess={onLoadSuccess}>
+      <Page pageNumber={pageNumber} scale={1.6} />
+    </Document>
   )
 }

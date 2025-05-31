@@ -1,36 +1,37 @@
-import OpenAI from 'openai'
+import { MultipartFile } from '@adonisjs/core/bodyparser'
+import { AiService } from './ai_service.js'
+import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs'
+import type { TextItem } from 'pdfjs-dist/types/src/display/api.js'
+import Document from '#models/document'
 
 export class EmbeddingService {
-  openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
+  private aiService: AiService
 
-  async createEmbedding(text: string): Promise<number[]> {
-    try {
-      const response = await this.openai.embeddings.create({
-        model: 'text-embedding-3-small',
-        input: text,
-        encoding_format: 'float',
-      })
-
-      return response.data[0].embedding // Assuming the response structure
-    } catch (error) {
-      console.error('Error creating embedding:', error)
-      throw new Error('Failed to create embedding')
-    }
+  constructor() {
+    this.aiService = new AiService()
   }
 
-  async chat(message: string) {
-    try {
-      const response = await this.openai.responses.create({
-        model: 'gpt-3.5-turbo',
-        input: message,
-      })
+  async embed(file: MultipartFile, document: Document) {
+    const doc = await getDocument('storage/' + file.filePath!).promise
 
-      return response.output_text
-    } catch (error) {
-      console.error('Error in chat:', error)
-      throw new Error('Failed to process chat message')
+    const strings = []
+
+    for (let i = 1; i <= doc.numPages; i++) {
+      const page = await doc.getPage(i)
+      const textContent = await page.getTextContent()
+      const pageStrings = textContent.items.map((item) => (item as TextItem).str)
+      strings.push(...pageStrings)
     }
+    const text = strings.join(' ')
+
+    try {
+      document.embedding = await this.aiService.createEmbedding(text)
+      document.content = text
+      document.status = 'success'
+    } catch {
+      document.status = 'failed'
+    }
+
+    await document.save()
   }
 }
