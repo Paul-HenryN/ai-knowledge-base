@@ -3,8 +3,8 @@ import AppLayout from '@/components/layout/app-layout'
 import { PDFViewer } from '@/components/pdf-viewer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { InferPageProps } from '@adonisjs/inertia/types'
-import { ChevronLeftIcon, ChevronRightIcon, FileText } from 'lucide-react'
+import { InferPageProps, PageObject } from '@adonisjs/inertia/types'
+import { BookOpenTextIcon, ChevronLeftIcon, ChevronRightIcon, FileText } from 'lucide-react'
 import { useState } from 'react'
 
 function pluralize(count: number, singular: string, plural: string) {
@@ -15,7 +15,9 @@ function pluralize(count: number, singular: string, plural: string) {
   return singular
 }
 
-const DocumentPage = ({ document }: InferPageProps<DocumentsController, 'show'>) => {
+type DocumentPageProps = InferPageProps<DocumentsController, 'show'>
+
+const DocumentPage = ({ document }: DocumentPageProps) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
@@ -80,6 +82,22 @@ const DocumentPage = ({ document }: InferPageProps<DocumentsController, 'show'>)
   )
 }
 
-DocumentPage.layout = (page: React.ReactNode) => <AppLayout>{page}</AppLayout>
+DocumentPage.layout = (page: PageObject<DocumentPageProps>) => {
+  const document = page.props.document
+
+  const breadcrumbData = [
+    {
+      label: 'Knowledge base',
+      href: '/',
+      icon: BookOpenTextIcon,
+    },
+    {
+      label: document.name,
+      href: `/documents/${document.id}`,
+    },
+  ]
+
+  return <AppLayout breadcrumbData={breadcrumbData}>{page}</AppLayout>
+}
 
 export default DocumentPage
