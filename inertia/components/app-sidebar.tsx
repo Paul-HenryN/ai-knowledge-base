@@ -20,12 +20,12 @@ const menuItems = [
   {
     title: 'Home',
     icon: HomeIcon,
-    href: '/home',
+    href: '/',
   },
   {
     title: 'Ask Nali',
     icon: SparkleIcon,
-    href: '/search',
+    href: '/chat',
   },
   {
     title: 'Favorites',
@@ -58,9 +58,11 @@ export function AppSidebar({ recentDocuments }: SharedProps) {
                   key={item.title}
                   className="w-full justify-start gap-2 h-8 text-xs"
                 >
-                  <SidebarMenuButton>
-                    <item.icon className="h-4 w-4" />
-                    <span className="truncate">{item.title}</span>
+                  <SidebarMenuButton asChild>
+                    <Link href={item.href}>
+                      <item.icon className="h-4 w-4" />
+                      <span className="truncate">{item.title}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )

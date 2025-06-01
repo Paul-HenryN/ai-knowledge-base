@@ -35,7 +35,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
           </header>
 
-          {children}
+          <main className="p-6">{children}</main>
         </div>
       </SidebarProvider>
 

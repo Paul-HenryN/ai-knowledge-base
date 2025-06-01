@@ -18,5 +18,5 @@ export const TypewriterMessage = ({ message, speed = 5 }: { message: string; spe
     )
   }, [message, speed])
 
-  return <p>{message.slice(0, currentIndex)}</p>
+  return <pre>{message.slice(0, currentIndex)}</pre>
 }

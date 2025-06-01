@@ -20,7 +20,7 @@ const DocumentPage = ({ document }: InferPageProps<DocumentsController, 'show'>)
   const [totalPages, setTotalPages] = useState(1)
 
   return (
-    <main className="p-6">
+    <>
       <div className="flex items-center justify-between">
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-2">
@@ -76,7 +76,7 @@ const DocumentPage = ({ document }: InferPageProps<DocumentsController, 'show'>)
           setTotalPages(numPages)
         }}
       />
-    </main>
+    </>
   )
 }
 

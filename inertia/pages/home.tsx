@@ -38,7 +38,7 @@ function HomePage({ documents }: InferPageProps<DocumentsController, 'index'>) {
   }
 
   return (
-    <main className="p-5">
+    <>
       <div className="flex items-center justify-between mb-10">
         <div className="flex items-center gap-3">
           <BookOpenTextIcon size={24} />
@@ -77,7 +77,7 @@ function HomePage({ documents }: InferPageProps<DocumentsController, 'index'>) {
           ))}
         </TableBody>
       </Table>
-    </main>
+    </>
   )
 }
 
