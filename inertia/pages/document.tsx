@@ -1,83 +1,50 @@
 import DocumentsController from '#controllers/documents_controller'
 import AppLayout from '@/components/layout/app-layout'
-import { PDFViewer } from '@/components/pdf-viewer'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { InferPageProps, PageObject } from '@adonisjs/inertia/types'
-import { BookOpenTextIcon, ChevronLeftIcon, ChevronRightIcon, FileText } from 'lucide-react'
-import { useState } from 'react'
-
-function pluralize(count: number, singular: string, plural: string) {
-  if (count > 1) {
-    return plural
-  }
-
-  return singular
-}
+import { BookOpenTextIcon, FileText } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { axios } from '@/lib/axios'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type DocumentPageProps = InferPageProps<DocumentsController, 'show'>
 
 const DocumentPage = ({ document }: DocumentPageProps) => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const { data: fileBlobUrl, isLoading } = useQuery({
+    queryKey: ['documents', document.id, 'file'],
+    queryFn: () =>
+      axios.get(document.url, { responseType: 'arraybuffer' }).then((res) => {
+        const blob = new Blob([res.data], { type: 'application/pdf' })
+        return URL.createObjectURL(blob)
+      }),
+    staleTime: Infinity,
+  })
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <FileText className="h-6 w-6 text-red-500" />
-            <h1 className="text-2xl font-semibold">{document.name}</h1>
-            <Badge variant="secondary" className="uppercase">
-              {document.type}
-            </Badge>
-          </div>
-
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <span>2.4 MB</span>
-            <span>•</span>
-            <span>{document.updatedAt}</span>
-            <span>•</span>
-            <span>
-              {totalPages} {pluralize(totalPages, 'page', 'pages')}
-            </span>
-          </div>
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-2">
+          <FileText className="h-6 w-6 text-red-500" />
+          <h1 className="text-2xl font-semibold truncate max-w-[600px]" title={document.name}>
+            {document.name}
+          </h1>
+          <Badge variant="secondary" className="uppercase">
+            {document.type}
+          </Badge>
         </div>
 
-        <div className="flex gap-2">
-          <Button
-            size="icon"
-            onClick={() => {
-              if (currentPage > 1) {
-                setCurrentPage(currentPage - 1)
-              }
-            }}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeftIcon />
-          </Button>
-
-          <Button
-            size="icon"
-            onClick={() => {
-              if (currentPage < totalPages) {
-                setCurrentPage(currentPage + 1)
-              }
-            }}
-            disabled={currentPage === totalPages}
-          >
-            <ChevronRightIcon />
-          </Button>
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <span>2.4 MB</span>
+          <span>•</span>
+          <span>{document.createdAt}</span>
         </div>
       </div>
 
-      <PDFViewer
-        pageNumber={currentPage}
-        pdfUrl={document.url}
-        onLoadSuccess={({ numPages }) => {
-          setTotalPages(numPages)
-        }}
-      />
+      {isLoading ? (
+        <Skeleton className="w-full h-[800px]" />
+      ) : (
+        <embed src={fileBlobUrl} width="100%" height="800" />
+      )}
     </>
   )
 }
