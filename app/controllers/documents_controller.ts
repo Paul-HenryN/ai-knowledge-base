@@ -23,13 +23,13 @@ export default class DocumentsController {
     const { id } = request.params()
     const document = await Document.findOrFail(id)
 
-    return inertia.render('document', { document: DocumentDto.toJson(document) })
+    return inertia.render('document/show', { document: DocumentDto.toJson(document) })
   }
 
   async index({ inertia }: HttpContext) {
     const documents = await Document.query().orderBy('updatedAt', 'desc')
 
-    return inertia.render('home', { documents: documents.map(DocumentDto.toJson) })
+    return inertia.render('document/index', { documents: documents.map(DocumentDto.toJson) })
   }
 
   @inject()
@@ -58,6 +58,6 @@ export default class DocumentsController {
       embeddingService.embed(file, newDocument)
     })
 
-    return response.redirect().toRoute('home')
+    return response.redirect().toRoute('documentsIndex')
   }
 }

@@ -1,4 +1,6 @@
+import { ChatDto } from '#controllers/chats_controller'
 import { DocumentDto } from '#controllers/documents_controller'
+import Chat from '#models/chat'
 import Document from '#models/document'
 import { defineConfig } from '@adonisjs/inertia'
 import type { InferSharedProps } from '@adonisjs/inertia/types'
@@ -17,6 +19,11 @@ const inertiaConfig = defineConfig({
       const documents = await Document.query().orderBy('createdAt', 'desc').limit(5)
       return documents.map(DocumentDto.toJson)
     },
+    chats: async () => {
+      const chats = await Chat.query().preload('messages').orderBy('createdAt', 'desc')
+      return chats.map(ChatDto.toJson)
+    },
+    flash: ({ session }) => session.flashMessages,
   },
 
   /**

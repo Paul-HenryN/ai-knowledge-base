@@ -1,4 +1,10 @@
-import { FileTextIcon, HomeIcon, SparkleIcon, StarIcon, UploadIcon } from 'lucide-react'
+import {
+  BookOpenTextIcon,
+  FileTextIcon,
+  HomeIcon,
+  MessageSquareIcon,
+  UploadIcon,
+} from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -12,30 +18,31 @@ import {
 import { Separator } from './ui/separator'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
-import { SharedProps } from '@adonisjs/inertia/types'
 import { useDocumentUploadDialog } from './document-upload-dialog'
-import { Link } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 const menuItems = [
   {
     title: 'Home',
     icon: HomeIcon,
     href: '/',
+    isActive: (route: string) => route === '/',
   },
   {
-    title: 'Ask Nali',
-    icon: SparkleIcon,
-    href: '/chat',
-  },
-  {
-    title: 'Favorites',
-    icon: StarIcon,
-    href: '/favorites',
+    title: 'Knowledge Base',
+    icon: BookOpenTextIcon,
+    href: '/documents',
+    isActive: (route: string) => route.startsWith('/documents'),
   },
 ]
 
-export function AppSidebar({ recentDocuments }: SharedProps) {
+export function AppSidebar() {
   const { setOpen } = useDocumentUploadDialog()
+  const {
+    props: { recentDocuments, chats },
+    url,
+  } = usePage<SharedProps>()
 
   return (
     <Sidebar>
@@ -58,7 +65,7 @@ export function AppSidebar({ recentDocuments }: SharedProps) {
                   key={item.title}
                   className="w-full justify-start gap-2 h-8 text-xs"
                 >
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild isActive={item.isActive(url)}>
                     <Link href={item.href}>
                       <item.icon className="h-4 w-4" />
                       <span className="truncate">{item.title}</span>
@@ -67,6 +74,25 @@ export function AppSidebar({ recentDocuments }: SharedProps) {
                 </SidebarMenuItem>
               )
             })}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        <Separator />
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Conversations</SidebarGroupLabel>
+
+          <SidebarMenu>
+            {chats.map((chat) => (
+              <SidebarMenuItem key={`chat-${chat.id}`}>
+                <SidebarMenuButton asChild isActive={url === `/chat/${chat.id}`}>
+                  <Link href={`/chat/${chat.id}`}>
+                    <MessageSquareIcon />
+                    {chat.title}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
           </SidebarMenu>
         </SidebarGroup>
 

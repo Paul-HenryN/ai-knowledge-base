@@ -2,8 +2,6 @@ import { Button } from '@/components/ui/button'
 import { LucideIcon, MoreHorizontal } from 'lucide-react'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
-import { SharedProps } from '@adonisjs/inertia/types'
-import { usePage } from '@inertiajs/react'
 import { DocumentUploadDialog, DocumentUploadDialogProvider } from '../document-upload-dialog'
 import {
   Breadcrumb,
@@ -28,7 +26,6 @@ export default function AppLayout({
   children: React.ReactNode
   breadcrumbData?: BreadcrumbItem[]
 }) {
-  const { props } = usePage<SharedProps>()
   const pastBreadcrumbItems = breadcrumbData?.slice(0, breadcrumbData.length - 1)
   const activeBreadcrumbItem = breadcrumbData?.[breadcrumbData.length - 1]
 
@@ -36,10 +33,10 @@ export default function AppLayout({
     <QueryClientProvider>
       <DocumentUploadDialogProvider>
         <SidebarProvider>
-          <AppSidebar recentDocuments={props.recentDocuments} />
+          <AppSidebar />
 
           <div className="w-full">
-            <header className="p-6">
+            <header className="px-6 py-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <SidebarTrigger />
@@ -83,7 +80,7 @@ export default function AppLayout({
               </div>
             </header>
 
-            <main className="p-6">{children}</main>
+            <main className="px-6">{children}</main>
           </div>
         </SidebarProvider>
 

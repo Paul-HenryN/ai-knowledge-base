@@ -12,9 +12,11 @@ const ChatsController = () => import('#controllers/chats_controller')
 
 import router from '@adonisjs/core/services/router'
 
-router.get('/', [DocumentsController, 'index']).as('home')
+router.on('/').renderInertia('home')
+router.get('/documents', [DocumentsController, 'index']).as('documentsIndex')
 router.post('/documents', [DocumentsController, 'store'])
-router.post('/chat', [ChatsController, 'post'])
 router.get('/documents/:id', [DocumentsController, 'show'])
 
-router.get('/chat', [ChatsController, 'create'])
+router.get('/chat/:id', [ChatsController, 'show']).as('chatShow')
+router.post('/chat', [ChatsController, 'store'])
+router.put('/chat/:id', [ChatsController, 'update'])

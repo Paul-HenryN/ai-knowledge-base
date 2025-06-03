@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 
-export const TypewriterMessage = ({ message, speed = 5 }: { message: string; speed?: number }) => {
+interface TypewriterMessageProps {
+  speed?: number
+  message: string
+  id?: string
+}
+
+export const TypewriterMessage = ({ id, message, speed = 5 }: TypewriterMessageProps) => {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
@@ -18,5 +24,9 @@ export const TypewriterMessage = ({ message, speed = 5 }: { message: string; spe
     )
   }, [message, speed])
 
-  return <pre>{message.slice(0, currentIndex)}</pre>
+  return (
+    <pre id={id} className="text-sm whitespace-pre-line">
+      {message.slice(0, currentIndex)}
+    </pre>
+  )
 }
