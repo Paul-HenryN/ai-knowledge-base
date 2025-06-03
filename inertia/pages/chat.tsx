@@ -16,7 +16,7 @@ type ChatPageProps = InferPageProps<ChatsController, 'show'>
 type Message = ChatPageProps['chat']['messages'][number]
 
 export function ChatPage({ chat, flash }: ChatPageProps) {
-  const { data, setData, put, processing, reset } = useForm({
+  const { data, setData, put, processing } = useForm({
     userInput: '',
   })
 
@@ -40,7 +40,7 @@ export function ChatPage({ chat, flash }: ChatPageProps) {
     put(`/chat/${chat.id}`, {
       onSuccess: (page) => {
         setConversation((page.props.chat as ChatPageProps['chat']).messages)
-        reset()
+        setData({ userInput: '' })
       },
     })
   }

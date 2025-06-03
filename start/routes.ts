@@ -9,10 +9,14 @@
 
 const DocumentsController = () => import('#controllers/documents_controller')
 const ChatsController = () => import('#controllers/chats_controller')
+const HomeController = () => import('#controllers/home_controller')
+const OnboardingController = () => import('#controllers/onboarding_controller')
 
 import router from '@adonisjs/core/services/router'
 
-router.on('/').renderInertia('home')
+router.get('/', [HomeController]).as('home')
+router.get('/onboarding', [OnboardingController]).as('onboarding')
+
 router.get('/documents', [DocumentsController, 'index']).as('documentsIndex')
 router.post('/documents', [DocumentsController, 'store'])
 router.get('/documents/:id', [DocumentsController, 'show'])

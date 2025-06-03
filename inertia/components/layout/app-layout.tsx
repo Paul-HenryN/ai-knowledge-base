@@ -12,6 +12,7 @@ import {
   BreadcrumbSeparator,
 } from '../ui/breadcrumb'
 import { QueryClientProvider } from '../query-client-provider'
+import { Link } from '@inertiajs/react'
 
 type BreadcrumbItem = {
   label: string
@@ -47,9 +48,11 @@ export default function AppLayout({
                         {pastBreadcrumbItems.map((item) => (
                           <>
                             <BreadcrumbItem>
-                              <BreadcrumbLink href={item.href} className="flex gap-2">
-                                {item.icon && <item.icon size={18} />}
-                                <span className="truncate max-w-[200px]"> {item.label}</span>
+                              <BreadcrumbLink className="flex gap-2" asChild>
+                                <Link href={item.href}>
+                                  {item.icon && <item.icon size={18} />}
+                                  <span className="truncate max-w-[200px]"> {item.label}</span>
+                                </Link>
                               </BreadcrumbLink>
                             </BreadcrumbItem>
 

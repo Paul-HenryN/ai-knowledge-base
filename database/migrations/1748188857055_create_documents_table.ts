@@ -12,6 +12,7 @@ export default class extends BaseSchema {
       table.string('url').notNullable().notNullable()
       table.string('type').notNullable().notNullable()
       table.string('status').notNullable().defaultTo('pending')
+      table.dateTime('last_viewed_at').notNullable()
       table.timestamps(true, true)
     })
   }

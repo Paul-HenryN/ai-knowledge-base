@@ -3,6 +3,7 @@ import { EmbeddingService } from '#services/embedding_service'
 import { inject } from '@adonisjs/core'
 import { cuid } from '@adonisjs/core/helpers'
 import type { HttpContext } from '@adonisjs/core/http'
+import { DateTime } from 'luxon'
 
 export class DocumentDto {
   static toJson(document: Document) {
@@ -14,6 +15,7 @@ export class DocumentDto {
       type: document.type,
       url: document.url,
       status: document.status,
+      lastViewedAt: document.lastViewedAt.toRelative(),
     }
   }
 }
@@ -22,6 +24,9 @@ export default class DocumentsController {
   async show({ inertia, request }: HttpContext) {
     const { id } = request.params()
     const document = await Document.findOrFail(id)
+
+    document.lastViewedAt = DateTime.now()
+    await document.save()
 
     return inertia.render('document/show', { document: DocumentDto.toJson(document) })
   }

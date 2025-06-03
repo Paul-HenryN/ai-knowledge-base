@@ -27,6 +27,9 @@ export default class Document extends BaseModel {
   declare status: 'pending' | 'failed' | 'success'
 
   @column.dateTime({ autoCreate: true })
+  declare lastViewedAt: DateTime
+
+  @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
