@@ -20,6 +20,7 @@ router.get('/onboarding', [OnboardingController]).as('onboarding')
 router.get('/documents', [DocumentsController, 'index']).as('documentsIndex')
 router.post('/documents', [DocumentsController, 'store'])
 router.get('/documents/:id', [DocumentsController, 'show'])
+router.delete('/documents/:id', [DocumentsController, 'destroy'])
 
 router.get('/chat/:id', [ChatsController, 'show']).as('chatShow')
 router.post('/chat', [ChatsController, 'store'])

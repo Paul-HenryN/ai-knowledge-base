@@ -5,6 +5,7 @@ import {
   CheckCircle2Icon,
   FileTextIcon,
   LoaderCircleIcon,
+  TrashIcon,
   Upload,
   XCircleIcon,
 } from 'lucide-react'
@@ -21,10 +22,11 @@ import { useDocumentUploadDialog } from '@/components/document-upload-dialog'
 import { cn } from '@/lib/utils'
 import { InferPageProps } from '@adonisjs/inertia/types'
 import DocumentsController from '#controllers/documents_controller'
-import { router } from '@inertiajs/react'
+import { router, useForm } from '@inertiajs/react'
 
 function HomePage({ documents }: InferPageProps<DocumentsController, 'index'>) {
   const { setOpen } = useDocumentUploadDialog()
+  const { delete: destroy, processing } = useForm()
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -38,7 +40,7 @@ function HomePage({ documents }: InferPageProps<DocumentsController, 'index'>) {
   }
 
   return (
-    <>
+    <div className="mt-10">
       <div className="flex items-center justify-between mb-10">
         <div className="flex items-center gap-3">
           <BookOpenTextIcon size={24} />
@@ -57,6 +59,8 @@ function HomePage({ documents }: InferPageProps<DocumentsController, 'index'>) {
             <TableHead className="w-[100px]">Document</TableHead>
             <TableHead className="w-[100px]">Status</TableHead>
             <TableHead className="w-[100px]">Created At</TableHead>
+            <TableHead className="w-[25px]">Last viewed</TableHead>
+            <TableHead className="w-[25px]"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -66,18 +70,37 @@ function HomePage({ documents }: InferPageProps<DocumentsController, 'index'>) {
               className={cn('cursor-pointer', document.status === 'pending' && 'animate-pulse')}
               onClick={() => router.visit(`/documents/${document.id}`)}
             >
-              <TableCell className={'flex items-center gap-4'}>
-                <FileTextIcon size={20} className="text-red-500" /> <span>{document.name}</span>
+              <TableCell>
+                <div className="flex gap-2 items-center">
+                  <FileTextIcon className="text-red-500 size-5" /> <span>{document.name}</span>
+                </div>
               </TableCell>
 
               <TableCell>{getStatusIcon(document.status)}</TableCell>
 
               <TableCell>{document.createdAt}</TableCell>
+
+              <TableCell>{document.lastViewedAt}</TableCell>
+
+              <TableCell>
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="p-0"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    destroy(`/documents/${document.id}`)
+                  }}
+                  disabled={processing || document.status === 'pending'}
+                >
+                  <TrashIcon />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </>
+    </div>
   )
 }
 

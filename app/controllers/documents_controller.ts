@@ -65,4 +65,13 @@ export default class DocumentsController {
 
     return response.redirect().toRoute('documentsIndex')
   }
+
+  async destroy({ request, response }: HttpContext) {
+    const { id } = request.params()
+
+    const document = await Document.findOrFail(id)
+    await document.delete()
+
+    return response.redirect().back()
+  }
 }

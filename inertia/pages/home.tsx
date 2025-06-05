@@ -65,7 +65,7 @@ const HomePage = ({ recentlyViewedDocuments }: InferPageProps<HomeController, 'h
           <Clock size={18} />
           Recent documents
         </h3>
-        <div className="space-y-2">
+        <div className="flex flex-col gap-3">
           {recentlyViewedDocuments.map((doc, index) => (
             <Link key={index} href={`/documents/${doc.id}`}>
               <Card className="p-3 cursor-pointer bg-accent">
