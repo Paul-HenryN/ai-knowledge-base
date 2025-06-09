@@ -1,4 +1,3 @@
-import AppLayout from '@/components/layout/app-layout'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -10,9 +9,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { SiGithub } from '@icons-pack/react-simple-icons'
-import { Link } from '@inertiajs/react'
 
-const SignupPage = () => {
+export default function LoginPage() {
   return (
     <Dialog open>
       <DialogContent>
@@ -66,7 +64,3 @@ const SignupPage = () => {
     </Dialog>
   )
 }
-
-SignupPage.layout = (page: React.ReactNode) => <AppLayout>{page}</AppLayout>
-
-export default SignupPage

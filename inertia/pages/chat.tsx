@@ -1,11 +1,10 @@
 import { Send } from 'lucide-react'
-import React, { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
-import AppLayout from '@/components/layout/app-layout'
 import { cn } from '@/lib/utils'
 import { InferPageProps } from '@adonisjs/inertia/types'
 import ChatsController from '#controllers/chats_controller'
@@ -15,7 +14,7 @@ import { useForm } from '@inertiajs/react'
 type ChatPageProps = InferPageProps<ChatsController, 'show'>
 type Message = ChatPageProps['chat']['messages'][number]
 
-export function ChatPage({ chat, flash }: ChatPageProps) {
+export default function ChatPage({ chat, flash }: ChatPageProps) {
   const { data, setData, put, processing } = useForm({
     userInput: '',
   })
@@ -138,7 +137,3 @@ const UserMessage = ({ text, className, id }: { text: string; className?: string
     </div>
   )
 }
-
-ChatPage.layout = (page: React.ReactNode) => <AppLayout>{page}</AppLayout>
-
-export default ChatPage

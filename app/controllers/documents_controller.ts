@@ -21,9 +21,11 @@ export class DocumentDto {
 }
 
 export default class DocumentsController {
-  async show({ inertia, request }: HttpContext) {
+  async show({ inertia, request, auth }: HttpContext) {
     const { id } = request.params()
-    const document = await Document.findOrFail(id)
+
+    const user = auth.user!
+    const document = await Document.findByOrFail({ id, userId: user.id })
 
     document.lastViewedAt = DateTime.now()
     await document.save()
@@ -31,14 +33,19 @@ export default class DocumentsController {
     return inertia.render('document/show', { document: DocumentDto.toJson(document) })
   }
 
-  async index({ inertia }: HttpContext) {
-    const documents = await Document.query().orderBy('updatedAt', 'desc')
+  async index({ inertia, auth }: HttpContext) {
+    const user = auth.user!
 
-    return inertia.render('document/index', { documents: documents.map(DocumentDto.toJson) })
+    return inertia.render('document/index', {
+      documents: (await Document.findManyBy({ userId: user.id })).map(DocumentDto.toJson),
+    })
   }
 
   @inject()
-  async store({ request, inertia, response }: HttpContext, embeddingService: EmbeddingService) {
+  async store(
+    { request, inertia, response, auth }: HttpContext,
+    embeddingService: EmbeddingService
+  ) {
     const files = request.files('files', {
       extnames: ['pdf'],
       size: '10mb',
@@ -58,6 +65,7 @@ export default class DocumentsController {
         name: file.clientName,
         url: file.meta.url,
         type: file.extname,
+        userId: auth.user!.id,
       })
 
       embeddingService.embed(file, newDocument)
@@ -66,10 +74,11 @@ export default class DocumentsController {
     return response.redirect().toRoute('documentsIndex')
   }
 
-  async destroy({ request, response }: HttpContext) {
+  async destroy({ request, response, auth }: HttpContext) {
     const { id } = request.params()
+    const user = auth.user!
 
-    const document = await Document.findOrFail(id)
+    const document = await Document.findByOrFail({ id, userId: user.id })
     await document.delete()
 
     return response.redirect().back()

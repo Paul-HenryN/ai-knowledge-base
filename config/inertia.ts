@@ -1,5 +1,6 @@
 import { ChatDto } from '#controllers/chats_controller'
 import { DocumentDto } from '#controllers/documents_controller'
+import { UserDto } from '#controllers/sessions_controller'
 import Chat from '#models/chat'
 import Document from '#models/document'
 import { defineConfig } from '@adonisjs/inertia'
@@ -15,15 +16,26 @@ const inertiaConfig = defineConfig({
    * Data that should be shared with all rendered pages
    */
   sharedData: {
-    recentDocuments: async () => {
-      const documents = await Document.query().orderBy('createdAt', 'desc').limit(5)
+    recentDocuments: async ({ auth }) => {
+      if (!auth.user) return []
+
+      const documents = await Document.query()
+        .where({ userId: auth.user.id })
+        .orderBy('createdAt', 'desc')
+        .limit(5)
       return documents.map(DocumentDto.toJson)
     },
-    chats: async () => {
-      const chats = await Chat.query().preload('messages').orderBy('createdAt', 'desc')
+    chats: async ({ auth }) => {
+      if (!auth.user) return []
+
+      const chats = await Chat.query()
+        .preload('messages')
+        .where({ userId: auth.user.id })
+        .orderBy('createdAt', 'desc')
       return chats.map(ChatDto.toJson)
     },
     flash: ({ session }) => session.flashMessages,
+    user: ({ auth }) => (auth.user ? UserDto.toJson(auth.user) : null),
   },
 
   /**

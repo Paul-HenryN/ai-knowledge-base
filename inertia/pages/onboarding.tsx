@@ -1,10 +1,9 @@
 import { useDocumentUploadDialog } from '@/components/document-upload-dialog'
-import AppLayout from '@/components/layout/app-layout'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Upload, Brain, Zap } from 'lucide-react'
 
-const OnboardingPage = () => {
+export default function OnboardingPage() {
   const { setOpen } = useDocumentUploadDialog()
 
   return (
@@ -85,7 +84,3 @@ const OnboardingPage = () => {
     </div>
   )
 }
-
-OnboardingPage.layout = (page: React.ReactNode) => <AppLayout>{page}</AppLayout>
-
-export default OnboardingPage

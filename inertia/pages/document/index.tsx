@@ -1,5 +1,3 @@
-import AppLayout from '@/components/layout/app-layout'
-import React from 'react'
 import {
   BookOpenTextIcon,
   CheckCircle2Icon,
@@ -24,7 +22,9 @@ import { InferPageProps } from '@adonisjs/inertia/types'
 import DocumentsController from '#controllers/documents_controller'
 import { router, useForm } from '@inertiajs/react'
 
-function HomePage({ documents }: InferPageProps<DocumentsController, 'index'>) {
+export default function DocumentsIndexPage({
+  documents,
+}: InferPageProps<DocumentsController, 'index'>) {
   const { setOpen } = useDocumentUploadDialog()
   const { delete: destroy, processing } = useForm()
 
@@ -103,7 +103,3 @@ function HomePage({ documents }: InferPageProps<DocumentsController, 'index'>) {
     </div>
   )
 }
-
-HomePage.layout = (page: React.ReactNode) => <AppLayout>{page}</AppLayout>
-
-export default HomePage

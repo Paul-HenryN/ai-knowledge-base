@@ -10,7 +10,7 @@ export default class OAuthController {
     return ally.use(validatedProvider).redirect()
   }
 
-  public async store({ ally, request, response }: HttpContext) {
+  public async store({ ally, request, response, auth }: HttpContext) {
     const { provider } = request.params()
     const validatedProvider = await oauthProviderValidator.validate(provider)
 
@@ -30,12 +30,20 @@ export default class OAuthController {
 
     const user = await driver.user()
 
-    await User.create({
-      email: user.email,
-      fullName: user.name,
-      provider: validatedProvider,
-    })
+    const newUser = await User.updateOrCreate(
+      {
+        email: user.email,
+      },
+      {
+        email: user.email,
+        fullName: user.name,
+        provider: validatedProvider,
+        avatarUrl: user.avatarUrl,
+      }
+    )
 
-    return response.redirect().toRoute('onboarding')
+    await auth.use('web').login(newUser)
+
+    return response.redirect().toRoute('home')
   }
 }

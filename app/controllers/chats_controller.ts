@@ -36,22 +36,22 @@ export default class ChatsController {
     return inertia.render('chat')
   }
 
-  public async show({ inertia, request }: HttpContext) {
+  public async show({ inertia, request, auth }: HttpContext) {
     const { id } = request.params()
 
-    const chat = await Chat.findOrFail(id)
+    const chat = await Chat.findByOrFail({ id, userId: auth.user!.id })
 
     await chat.load('messages')
-
     return inertia.render('chat', { chat: ChatDto.toJson(chat) })
   }
 
   @inject()
-  public async store({ request, response, session }: HttpContext, aiService: AiService) {
+  public async store({ request, response, session, auth }: HttpContext, aiService: AiService) {
     const { userInput } = request.body()
 
     const newChat = await Chat.create({
       title: cuid(),
+      userId: auth.user!.id,
     })
 
     await Message.create({
@@ -90,11 +90,11 @@ export default class ChatsController {
   }
 
   @inject()
-  public async update({ request, response, session }: HttpContext, aiService: AiService) {
+  public async update({ request, response, session, auth }: HttpContext, aiService: AiService) {
     const { userInput } = request.body()
     const { id } = request.params()
 
-    const chat = await Chat.findOrFail(id)
+    const chat = await Chat.findByOrFail({ id, userId: auth.user!.id })
 
     await Message.create({
       text: userInput,

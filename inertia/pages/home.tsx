@@ -1,15 +1,16 @@
-import React, { FormEvent } from 'react'
+import { FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { Send, Clock, Zap, Brain } from 'lucide-react'
-import AppLayout from '@/components/layout/app-layout'
+import { Send, Clock, Brain } from 'lucide-react'
 import { Link, useForm } from '@inertiajs/react'
 import { cn } from '@/lib/utils'
 import { InferPageProps } from '@adonisjs/inertia/types'
 import HomeController from '#controllers/home_controller'
 
-const HomePage = ({ recentlyViewedDocuments }: InferPageProps<HomeController, 'handle'>) => {
+export default function HomePage({
+  recentlyViewedDocuments,
+}: InferPageProps<HomeController, 'handle'>) {
   const { data, setData, post, processing } = useForm({
     userInput: '',
   })
@@ -85,7 +86,3 @@ const HomePage = ({ recentlyViewedDocuments }: InferPageProps<HomeController, 'h
     </div>
   )
 }
-
-HomePage.layout = (page: React.ReactNode) => <AppLayout>{page}</AppLayout>
-
-export default HomePage
