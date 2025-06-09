@@ -7,16 +7,16 @@ export default function OnboardingPage() {
   const { setOpen } = useDocumentUploadDialog()
 
   return (
-    <div className="max-w-4xl w-full space-y-8 mx-auto">
+    <div className="max-w-3xl w-full space-y-8 mx-auto mt-18">
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex justify-center">
-          <div className="bg-muted p-3 rounded-full">
-            <Brain className="h-8 w-8" />
+          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto">
+            <Brain className="w-8 h-8 text-white" />
           </div>
         </div>
         <h1 className="text-4xl font-bold">Welcome to Your AI Knowledge Base</h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-balance">
           Transform your documents into an intelligent, searchable knowledge base. Get started by
           importing your first documents.
         </p>
@@ -71,7 +71,7 @@ export default function OnboardingPage() {
       <div className="text-center">
         <p className="text-sm text-muted-foreground mb-2">Supported formats:</p>
         <div className="flex flex-wrap justify-center gap-2">
-          {['PDF', 'DOCX', 'TXT', 'MD', 'CSV', 'XLSX'].map((format) => (
+          {['PDF'].map((format) => (
             <span
               key={format}
               className="bg-muted text-muted-foreground px-2 py-1 rounded text-xs font-medium"

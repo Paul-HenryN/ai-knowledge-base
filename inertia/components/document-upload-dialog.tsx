@@ -53,14 +53,7 @@ export function DocumentUploadDialog() {
   })
 
   const isValidFileType = (file: File) => {
-    return (
-      file.type === 'application/pdf' ||
-      file.type === 'text/markdown' ||
-      file.type === 'text/x-markdown' ||
-      file.name.endsWith('.md') ||
-      file.name.endsWith('.markdown') ||
-      file.name.endsWith('.pdf')
-    )
+    return file.type === 'application/pdf' || file.name.endsWith('.pdf')
   }
 
   const simulateUpload = (fileId: string) => {
@@ -157,8 +150,8 @@ export function DocumentUploadDialog() {
         <DialogHeader>
           <DialogTitle className="mb-1">Upload Documents to Knowledge Base</DialogTitle>
           <DialogDescription>
-            Upload PDF and Markdown files to enhance your AI knowledge base. Drag and drop files or
-            click to browse.
+            Upload PDF files to enhance your AI knowledge base. Drag and drop files or click to
+            browse.
           </DialogDescription>
         </DialogHeader>
 

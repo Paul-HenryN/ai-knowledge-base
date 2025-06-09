@@ -3,6 +3,7 @@ import {
   CheckCircle2Icon,
   FileTextIcon,
   LoaderCircleIcon,
+  PackageOpenIcon,
   TrashIcon,
   Upload,
   XCircleIcon,
@@ -63,41 +64,50 @@ export default function DocumentsIndexPage({
             <TableHead className="w-[25px]"></TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {documents.map((document) => (
-            <TableRow
-              key={document.id}
-              className={cn('cursor-pointer', document.status === 'pending' && 'animate-pulse')}
-              onClick={() => router.visit(`/documents/${document.id}`)}
-            >
-              <TableCell>
-                <div className="flex gap-2 items-center">
-                  <FileTextIcon className="text-red-500 size-5" /> <span>{document.name}</span>
-                </div>
-              </TableCell>
+          {documents.length ? (
+            documents.map((document) => (
+              <TableRow
+                key={document.id}
+                className={cn('cursor-pointer', document.status === 'pending' && 'animate-pulse')}
+                onClick={() => router.visit(`/documents/${document.id}`)}
+              >
+                <TableCell>
+                  <div className="flex gap-2 items-center">
+                    <FileTextIcon className="text-red-500 size-5" /> <span>{document.name}</span>
+                  </div>
+                </TableCell>
 
-              <TableCell>{getStatusIcon(document.status)}</TableCell>
+                <TableCell>{getStatusIcon(document.status)}</TableCell>
 
-              <TableCell>{document.createdAt}</TableCell>
+                <TableCell>{document.createdAt}</TableCell>
 
-              <TableCell>{document.lastViewedAt}</TableCell>
+                <TableCell>{document.lastViewedAt}</TableCell>
 
-              <TableCell>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  className="p-0"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    destroy(`/documents/${document.id}`)
-                  }}
-                  disabled={processing || document.status === 'pending'}
-                >
-                  <TrashIcon />
-                </Button>
+                <TableCell>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className="p-0"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      destroy(`/documents/${document.id}`)
+                    }}
+                    disabled={processing || document.status === 'pending'}
+                  >
+                    <TrashIcon />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center py-18 text-muted-foreground">
+                No document
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>
