@@ -1,8 +1,8 @@
 import { useDocumentUploadDialog } from '@/components/document-upload-dialog'
 import AppLayout from '@/components/layout/app-layout'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Upload, FileText, Brain, Zap } from 'lucide-react'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Upload, Brain, Zap } from 'lucide-react'
 
 const OnboardingPage = () => {
   const { setOpen } = useDocumentUploadDialog()
