@@ -78,13 +78,13 @@ export default function ChatPage({ chat, flash }: ChatPageProps) {
         </div>
       </ScrollArea>
 
-      <div>
+      <div className="max-w-4xl mx-auto">
         <form className="flex gap-2 relative" onSubmit={handleSubmit}>
           <Input
             placeholder="Ask a question about your documents..."
             value={data.userInput}
             onChange={(e) => setData('userInput', e.target?.value)}
-            className="h-20 border-none rounded-lg px-5 pb-2"
+            className="h-20 border-none rounded-lg px-5 pb-2 dark:bg-muted"
             disabled={processing}
           />
 

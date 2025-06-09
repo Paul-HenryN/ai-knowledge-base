@@ -107,11 +107,11 @@ export default class ChatsController {
       `
     SELECT content, embedding
     FROM documents
-    WHERE (embedding <-> ?) < 1.2
+    WHERE (embedding <-> ?) < 1.2 AND user_id = ?
     ORDER BY (embedding <-> ?)
     LIMIT 5
   `,
-      [`[${embeddedMessage}]`, `[${embeddedMessage}]`]
+      [`[${embeddedMessage}]`, auth.user!.id, `[${embeddedMessage}]`]
     )
 
     const context = similarChunks.map((row: any) => row.content).join('\n')

@@ -30,34 +30,32 @@ export default function HomePage({
 
         <div className="space-y-3">
           <h2 className="text-4xl">Welcome back, Paul-Henry</h2>
-          <p className="text-lg max-w-2xl mx-auto">
+          <p className="text-lg max-w-2xl mx-auto text-balance">
             Search through your knowledge base, get summaries, find related topics, or ask specific
             questions about your documents.
           </p>
         </div>
       </div>
 
-      <div className="mb-24">
-        <div className="flex gap-2 max-w-2xl mx-auto">
-          <form className="flex-1 relative" onSubmit={handleSubmit}>
-            <Input
-              value={data.userInput}
-              onChange={(e) => setData('userInput', e.target?.value)}
-              placeholder="Ask about your documents, search for topics, or request summaries..."
-              className="pr-12 h-18 text-base"
-              disabled={processing}
-            />
+      <div className="flex gap-2 max-w-2xl mx-auto mb-18">
+        <form className="flex-1 relative" onSubmit={handleSubmit}>
+          <Input
+            value={data.userInput}
+            onChange={(e) => setData('userInput', e.target?.value)}
+            placeholder="Ask about your documents, search for topics, or request summaries..."
+            className="pr-12 h-18 text-base"
+            disabled={processing}
+          />
 
-            <Button
-              type="submit"
-              size="icon"
-              disabled={!data.userInput || processing}
-              className={cn('absolute bottom-2 right-2', processing && 'animate-pulse')}
-            >
-              <Send />
-            </Button>
-          </form>
-        </div>
+          <Button
+            type="submit"
+            size="icon"
+            disabled={!data.userInput || processing}
+            className={cn('absolute bottom-2 right-2', processing && 'animate-pulse')}
+          >
+            <Send />
+          </Button>
+        </form>
       </div>
 
       {/* Recently Viewed Documents */}

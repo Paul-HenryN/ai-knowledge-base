@@ -3,8 +3,11 @@ import Document from '#models/document'
 import { DocumentDto } from '#controllers/documents_controller'
 
 export default class HomeController {
-  public async handle({ inertia, response }: HttpContext) {
-    const recentlyViewedDocuments = await Document.query().orderBy('lastViewedAt', 'desc').limit(5)
+  public async handle({ inertia, response, auth }: HttpContext) {
+    const recentlyViewedDocuments = await Document.query()
+      .where({ userId: auth.user!.id })
+      .orderBy('lastViewedAt', 'desc')
+      .limit(5)
 
     if (recentlyViewedDocuments.length === 0) {
       response.redirect().toRoute('onboarding')

@@ -74,12 +74,6 @@ export default function AppLayout({
                     </Breadcrumb>
                   )}
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </div>
               </div>
             </header>
 
