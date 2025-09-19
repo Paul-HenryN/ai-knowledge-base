@@ -1,6 +1,6 @@
 # AI Knowledge Base
 
-https://vimeo.com/1120098739?share=copy
+https://github.com/user-attachments/assets/cab7c272-5318-474c-bded-01d1b9711eed
 
 AI Knowledge Base is a full-stack web application designed to help users manage, search, and interact with documents and chats using advanced AI capabilities. Built with AdonisJS (Node.js & TypeScript) for the backend and React (via Inertia.js) for the frontend, it provides a seamless experience for document upload, chat, and knowledge discovery.
 
